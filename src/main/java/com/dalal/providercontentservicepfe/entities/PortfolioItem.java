@@ -1,6 +1,11 @@
 package com.dalal.providercontentservicepfe.entities;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "portfolio_items")
@@ -35,7 +40,7 @@ public class PortfolioItem {
             joinColumns = @JoinColumn(name = "id_provider", referencedColumnName = "id_provider"),
             inverseJoinColumns = @JoinColumn(name = "id_service", referencedColumnName = "id")
     )
-    private Set<Service> services;
+    private Set<Category> services;
 
     @PrePersist
     public void onCreate () {

@@ -1,5 +1,11 @@
 package com.dalal.providercontentservicepfe.entities;
 
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.Set;
+
 @Entity
 @Table(name = "services")
 @Getter
@@ -7,7 +13,7 @@ package com.dalal.providercontentservicepfe.entities;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Service {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
