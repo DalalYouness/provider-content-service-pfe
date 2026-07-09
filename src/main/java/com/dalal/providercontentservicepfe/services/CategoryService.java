@@ -11,7 +11,8 @@ import org.springframework.data.domain.Pageable;
 public interface CategoryService {
     // admin operations
     AddCategoryResponseDTO addNewService(CategoryRequestDTO category);
-    void updateService(CategoryRequestDTO newCategory);
+    CategoryResponseDTO updateService(Long id ,CategoryRequestDTO newCategory);
     void deleteService(Long id);
     Page<CategoryResponseDTO> getAllServices(int page, int size);
+    Page<CategoryResponseDTO> searchServices(String keyword, int page, int size);
 }

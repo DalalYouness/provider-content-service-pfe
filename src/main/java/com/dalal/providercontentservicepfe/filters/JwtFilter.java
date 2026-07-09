@@ -1,6 +1,7 @@
 package com.dalal.providercontentservicepfe.filters;
 
 import com.dalal.providercontentservicepfe.security.JwtService;
+import com.dalal.providercontentservicepfe.security.UserPrincipale;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,9 +39,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
 
-
             String email = jwtService.extractUsername(token);
             List<String> roles = jwtService.extractRoles(token);
+            Long id  = jwtService.extractId(token);
+            // best thing to do for adding mor claims
+            UserPrincipale userPrincipal = UserPrincipale.builder().id(id).email(email).build();
 
             if (email != null && roles != null) {
                 List<SimpleGrantedAuthority> authorities = roles.stream()
@@ -48,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         .collect(Collectors.toList());
 
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(email, null, authorities);
+                        new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

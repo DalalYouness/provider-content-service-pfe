@@ -5,6 +5,7 @@ import com.dalal.providercontentservicepfe.dtos.AddCategoryResponseDTO;
 import com.dalal.providercontentservicepfe.dtos.CategoryResponseDTO;
 import com.dalal.providercontentservicepfe.entities.Category;
 import com.dalal.providercontentservicepfe.exceptions.CategoryException;
+import com.dalal.providercontentservicepfe.exceptions.ServiceAlreadyExistsException;
 import com.dalal.providercontentservicepfe.exceptions.ServiceNotFoundException;
 import com.dalal.providercontentservicepfe.mappers.CategoryMapper;
 import com.dalal.providercontentservicepfe.repositories.CategoryRepository;
@@ -52,12 +53,39 @@ public class CategoryServiceImpl implements CategoryService{
         }
         categoryRepository.deleteById(id);
     }
-
     @Override
-    public void updateService(CategoryRequestDTO newCategory) {
+    public CategoryResponseDTO updateService(Long id, CategoryRequestDTO categoryRequestDTO) {
 
+        // 1 - On vérifie d'abord si le service existe bien pour faire la mise a jour (Sinon: Exception)
+        Category existingService = categoryRepository.findById(id)
+                .orElseThrow(() -> new ServiceNotFoundException("Service introuvable"));
+
+        // Normalisation du nom (Suppression des espaces et passage en minuscules)
+        String newServiceName = categoryRequestDTO.serviceName().trim().toLowerCase();
+
+        // 2 - On vérifie si le nouveau nom existe deja chez un AUTRE service (On exclut l'ID actuel)
+        // Cela évite de bloquer l'Admin s'il veut modifier uniquement la description sans changer le nom
+        boolean nameExists = categoryRepository.existsByServiceNameAndIdNot(newServiceName, id);
+        if (nameExists) {
+            throw new ServiceAlreadyExistsException("Un autre service avec le nom '" + categoryRequestDTO.serviceName() + "' existe deja.");
+        }
+
+        // 3 - Si tout est correct, on applique les modifications et on sauvegarde
+        existingService.setServiceName(newServiceName);
+        existingService.setDescription(categoryRequestDTO.description());
+
+        Category updatedService = categoryRepository.save(existingService);
+
+        // 4 - Retour du résultat sous forme de DTO
+        return categoryMapper.toCategoryResponseDTO(updatedService);
     }
 
+    @Override
+    public Page<CategoryResponseDTO> searchServices(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Category> categories = categoryRepository.findByServiceNameContainingIgnoreCase(keyword.trim(), pageable);
+        return categories.map(categoryMapper::toCategoryResponseDTO);
+    }
 
 
 }

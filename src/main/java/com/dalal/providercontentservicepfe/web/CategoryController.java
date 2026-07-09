@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -48,6 +47,23 @@ public class CategoryController {
         Map<String,String> response = new HashMap<>();
         response.put("message", "Service supprimée avec succès");
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryRequestDTO categoryRequestDTO){
+        CategoryResponseDTO categoryResponseDTO = categoryService.updateService(id, categoryRequestDTO);
+        return ResponseEntity.ok(categoryResponseDTO);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<CategoryResponseDTO>> searchServices(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<CategoryResponseDTO> result = categoryService.searchServices(keyword, page, size);
+        return ResponseEntity.ok(result);
     }
 
 }

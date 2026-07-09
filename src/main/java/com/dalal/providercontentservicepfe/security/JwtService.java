@@ -28,6 +28,17 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    // that code is very interesting because we avoid the cast issues
+    public Long extractId(String token) throws Exception {
+        return extractClaim(token, claims -> {
+            Object id = claims.get("id");
+            if (id instanceof Number number) {
+                return number.longValue();
+            }
+            return null;
+        });
+    }
+
     public List<String> extractRoles(String token) throws Exception {
         return extractClaim(token,claims -> claims.get("roles", List.class));
     }
