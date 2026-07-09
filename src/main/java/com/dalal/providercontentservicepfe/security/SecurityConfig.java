@@ -25,16 +25,25 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception ->
-                        // for change config at the level of authentication exceptions we modifie authenticationEntryPoint
-                        exception.authenticationEntryPoint(
-                                (request, response, authException) -> {
-                                    response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED);
-                                    response.setContentType("application/json");
-                                    response.getWriter().write("{\"message\": \"Identifiants invalides.\"}");
-                                }
-                        ))
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+                .exceptionHandling(exception -> exception
+
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED); // 401
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"message\": \"Token manquant ou invalide.\"}");
+                        })
+
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN); // 403 Forbidden
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"message\": \"Accès refusé. Privilèges insuffisants pour cette action.\"}");
+                        })
+                )
+                .authorizeHttpRequests(authorize ->
+                        authorize.requestMatchers("/api/v1/service/all")
+                                .permitAll()
+                                .anyRequest().authenticated()
+                )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // we have to check
         return http.build();
     }

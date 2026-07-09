@@ -1,7 +1,8 @@
 package com.dalal.providercontentservicepfe.handler;
 
-import com.dalal.providercontentservicepfe.dtos.CategoryResponseDTO;
+import com.dalal.providercontentservicepfe.dtos.AddCategoryResponseDTO;
 import com.dalal.providercontentservicepfe.exceptions.CategoryException;
+import com.dalal.providercontentservicepfe.exceptions.ServiceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,8 +19,8 @@ public class GlobalExceptionHandler {
 
     // for handling the CategoryException
     @ExceptionHandler(CategoryException.class)
-    public ResponseEntity<CategoryResponseDTO> handleCategoryAlreadyExists (CategoryException categoryException){
-        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO (categoryException.getMessage());
+    public ResponseEntity<AddCategoryResponseDTO> handleCategoryAlreadyExists (CategoryException categoryException){
+        AddCategoryResponseDTO categoryResponseDTO = new AddCategoryResponseDTO(categoryException.getMessage());
         return new ResponseEntity<>(categoryResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
@@ -41,5 +42,15 @@ public class GlobalExceptionHandler {
         response.put("validationErrors", errors);
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ServiceNotFoundException.class)
+    public ResponseEntity<Map<String,Object>> handleServiceNotFoundException(ServiceNotFoundException serviceNotFoundException){
+        Map<String,Object> response = new HashMap<>();
+        // i convert the localdate to string because it will send as an array so it's a little ambiguous
+        response.put("timestamp",LocalDateTime.now().toString());
+        response.put("status", HttpStatus.NOT_FOUND.value());
+        response.put("message", serviceNotFoundException.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

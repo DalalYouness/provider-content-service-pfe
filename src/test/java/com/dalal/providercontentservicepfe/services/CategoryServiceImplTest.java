@@ -1,7 +1,7 @@
 package com.dalal.providercontentservicepfe.services;
 
 import com.dalal.providercontentservicepfe.dtos.CategoryRequestDTO;
-import com.dalal.providercontentservicepfe.dtos.CategoryResponseDTO;
+import com.dalal.providercontentservicepfe.dtos.AddCategoryResponseDTO;
 import com.dalal.providercontentservicepfe.entities.Category;
 import com.dalal.providercontentservicepfe.exceptions.CategoryException;
 import com.dalal.providercontentservicepfe.mappers.CategoryMapper;
@@ -40,7 +40,7 @@ class CategoryServiceImplTest {
         Mockito.when(categoryMapper.toEntity(requestDto)).thenReturn(mockCategory);
         Mockito.when(categoryRepository.save(Mockito.any(Category.class))).thenReturn(mockCategory);
 
-        CategoryResponseDTO response = categoryService.addNewService(requestDto);
+        AddCategoryResponseDTO response = categoryService.addNewService(requestDto);
 
         assertNotNull(response);
         assertEquals("service créé avec succès", response.message());

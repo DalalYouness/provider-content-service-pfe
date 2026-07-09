@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,6 +37,7 @@ class CategoryIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void integration_AddNewService_Success() throws Exception {
 
         CategoryRequestDTO requestDto = new CategoryRequestDTO("  Plomberie  ", "Service de plomberie");
@@ -48,6 +50,7 @@ class CategoryIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void integration_AddNewService_ShouldFail_WhenNameIsBlank() throws Exception {
 
         CategoryRequestDTO invalidDto = new CategoryRequestDTO("", "Description");
@@ -58,6 +61,7 @@ class CategoryIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void integration_AddNewService_ShouldFail_WhenCategoryAlreadyExists() throws Exception {
 
         Category existingCategory = new Category();
