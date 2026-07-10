@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(name = "portfolio_items")
@@ -34,13 +33,6 @@ public class PortfolioItem {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToMany
-    @JoinTable(
-            name = "expertise",
-            joinColumns = @JoinColumn(name = "id_provider", referencedColumnName = "id_provider"),
-            inverseJoinColumns = @JoinColumn(name = "id_service", referencedColumnName = "id")
-    )
-    private Set<Category> services;
 
     @PrePersist
     public void onCreate () {

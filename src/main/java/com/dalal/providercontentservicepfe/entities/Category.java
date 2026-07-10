@@ -4,7 +4,7 @@ package com.dalal.providercontentservicepfe.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+
 
 @Entity
 @Table(name = "services")
@@ -25,6 +25,4 @@ public class Category {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToMany(mappedBy = "services")
-    private Set<PortfolioItem> portfolioItems;
 }
