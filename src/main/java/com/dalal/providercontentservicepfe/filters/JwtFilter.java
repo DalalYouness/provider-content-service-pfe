@@ -45,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // best thing to do for adding mor claims
             UserPrincipale userPrincipal = UserPrincipale.builder().id(id).email(email).build();
 
-            if (email != null && roles != null) {
+            if (email != null && roles != null && id != null) {
                 List<SimpleGrantedAuthority> authorities = roles.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());

@@ -12,15 +12,17 @@ import lombok.*;
 @Table(name = "expertise")
 @IdClass(ExpertiseId.class)
 public class Expertise {
-    @Column(name = "id_provider")
+
     @Id
+    @Column(name = "id_provider")
     private Long providerId;
 
     @Id
-    @Column
+    @Column(name = "id_service")
     private Long serviceId;
 
-    @JoinColumn(name = "service_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    // it's very important to do insertable and updatable false because at that cas hibernate will insert to service id
+    @JoinColumn(name = "id_service", insertable = false, updatable = false)
     private Category service;
 }

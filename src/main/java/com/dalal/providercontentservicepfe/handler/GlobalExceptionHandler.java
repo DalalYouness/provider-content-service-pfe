@@ -2,6 +2,7 @@ package com.dalal.providercontentservicepfe.handler;
 
 import com.dalal.providercontentservicepfe.dtos.AddCategoryResponseDTO;
 import com.dalal.providercontentservicepfe.exceptions.CategoryException;
+import com.dalal.providercontentservicepfe.exceptions.ServiceAlreadyAssignedException;
 import com.dalal.providercontentservicepfe.exceptions.ServiceAlreadyExistsException;
 import com.dalal.providercontentservicepfe.exceptions.ServiceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,15 @@ public class GlobalExceptionHandler {
         response.put("timestamp",LocalDateTime.now().toString());
         response.put("status", HttpStatus.CONFLICT.value()); // status : 409
         response.put("message", serviceAlreadyExistsException.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ServiceAlreadyAssignedException.class)
+    public ResponseEntity<Map<String,Object>> handleServiceAlreadyAssignedException(ServiceAlreadyAssignedException serviceAlreadyAssignedException){
+        Map<String,Object> response = new HashMap<>();
+        response.put("timestamp",LocalDateTime.now().toString());
+        response.put("status", HttpStatus.CONFLICT.value());
+        response.put("message", serviceAlreadyAssignedException.getMessage());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 }
