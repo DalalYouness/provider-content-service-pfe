@@ -46,7 +46,9 @@ public class ExpertiseServiceImpl implements ExpertiseService {
         expertiseRepository.saveAll(expertisesToSave);
     }
 
+
     //check provider exist (yet)
+    @Override
     public void addService(Long providerId, Long serviceId) {
 
         // awal verification
@@ -70,5 +72,19 @@ public class ExpertiseServiceImpl implements ExpertiseService {
 
         expertiseRepository.save(expertise);
     }
+
+    @Override
+
+    public void deleteService(Long providerId, Long serviceId) {
+        categoryRepository.findById(serviceId)
+                .orElseThrow(() -> new ServiceNotFoundException("Service introuvable."));
+        ExpertiseId expertiseId = new ExpertiseId(providerId, serviceId);
+        if (!expertiseRepository.findById(expertiseId).isPresent()) {
+            throw new ServiceNotFoundException("Ce service n'est pas associé au profil de ce prestataire.");
+        }
+        expertiseRepository.deleteById(expertiseId);
+    }
+
+
 
 }
