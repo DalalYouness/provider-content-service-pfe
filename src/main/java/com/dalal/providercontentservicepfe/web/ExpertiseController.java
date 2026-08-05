@@ -1,7 +1,6 @@
 package com.dalal.providercontentservicepfe.web;
 
 import com.dalal.providercontentservicepfe.dtos.AddServiceReqProviderDTO;
-import com.dalal.providercontentservicepfe.entities.Expertise;
 import com.dalal.providercontentservicepfe.security.UserPrincipale;
 import com.dalal.providercontentservicepfe.services.ExpertiseService;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +51,10 @@ public class ExpertiseController {
         Long providerId = userPrincipale.id();
         expertiseService.deleteService(providerId, serviceId);
         return ResponseEntity.ok(Map.of("message","service supprimé avec succès."));
+    }
+
+    @GetMapping("/{serviceId}/provider-ids")
+    public List<Long> getAllProviderIdsByServiceId(@PathVariable Long serviceId){
+        return expertiseService.getAllProviderIdsByServiceId(serviceId);
     }
 }
