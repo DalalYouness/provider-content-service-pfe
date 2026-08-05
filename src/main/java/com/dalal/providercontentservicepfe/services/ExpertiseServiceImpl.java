@@ -87,7 +87,10 @@ public class ExpertiseServiceImpl implements ExpertiseService {
 
     @Override
     public List<Long> getAllProviderIdsByServiceId(Long serviceId) {
-        return List.of();
+        return expertiseRepository.findByServiceId(serviceId)
+                .stream()
+                .map(Expertise::getProviderId)
+                .toList();
     }
 
 
