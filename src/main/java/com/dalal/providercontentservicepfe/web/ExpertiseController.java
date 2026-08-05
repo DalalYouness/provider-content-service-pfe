@@ -22,6 +22,7 @@ public class ExpertiseController {
 
     private final ExpertiseService expertiseService;
 
+    // apres , mais pour l'instant je vais laisser le prestataire de choisir une seul chose a faire
     @PostMapping("/select-services")
     @PreAuthorize("hasRole('PRESTATAIRE')")
     public ResponseEntity<Map<String, String>> selectServices(

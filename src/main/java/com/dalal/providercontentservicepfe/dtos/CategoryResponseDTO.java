@@ -1,7 +1,7 @@
 package com.dalal.providercontentservicepfe.dtos;
 
 public record CategoryResponseDTO(
-         Long id, // for our front 😎
+         Long id,
          String name,
          String description
 ) {

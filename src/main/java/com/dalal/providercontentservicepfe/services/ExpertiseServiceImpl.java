@@ -85,6 +85,10 @@ public class ExpertiseServiceImpl implements ExpertiseService {
         expertiseRepository.deleteById(expertiseId);
     }
 
+    @Override
+    public List<Long> getAllProviderIdsByServiceId(Long serviceId) {
+        return List.of();
+    }
 
 
 }
