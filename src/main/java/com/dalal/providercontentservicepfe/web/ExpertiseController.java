@@ -54,7 +54,7 @@ public class ExpertiseController {
     }
 
     @GetMapping("/{serviceId}/provider-ids")
-    public List<Long> getAllProviderIdsByServiceId(@PathVariable Long serviceId){
-        return expertiseService.getAllProviderIdsByServiceId(serviceId);
+    public ResponseEntity<List<Long>> getAllProviderIdsByServiceId(@PathVariable Long serviceId){
+        return ResponseEntity.ok(expertiseService.getAllProviderIdsByServiceId(serviceId));
     }
 }
