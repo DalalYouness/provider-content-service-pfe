@@ -40,7 +40,7 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/api/v1/service/all","/api/v1/service/search")
+                        authorize.requestMatchers("/api/v1/service/all","/api/v1/service/search","/api/v1/service/all/**","/api/v1/expertise/*/provider-ids")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )
