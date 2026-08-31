@@ -15,4 +15,6 @@ public interface CategoryService {
     void deleteService(Long id);
     Page<CategoryResponseDTO> getAllServices(int page, int size);
     Page<CategoryResponseDTO> searchServices(String keyword, int page, int size);
+    CategoryResponseDTO getServiceById(Long id);
+
 }

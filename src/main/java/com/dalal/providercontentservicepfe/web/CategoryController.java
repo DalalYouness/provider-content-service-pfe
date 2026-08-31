@@ -67,4 +67,9 @@ public class CategoryController {
         return ResponseEntity.ok(result);
     }
 
+    //----------------------------------------------------------- not a use case is just for booking service
+    @GetMapping("/category/{id}")
+    public ResponseEntity<CategoryResponseDTO> getCategoryById(@PathVariable Long id) {
+        return ResponseEntity.ok(categoryService.getServiceById(id));
+    }
 }

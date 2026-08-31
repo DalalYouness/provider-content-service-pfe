@@ -1,6 +1,7 @@
 package com.dalal.providercontentservicepfe.web;
 
 import com.dalal.providercontentservicepfe.dtos.AddServiceReqProviderDTO;
+import com.dalal.providercontentservicepfe.dtos.client.PrestataireMinResponseDto;
 import com.dalal.providercontentservicepfe.security.UserPrincipale;
 import com.dalal.providercontentservicepfe.services.ExpertiseService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class ExpertiseController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("add-more-service")
+    @PostMapping("/add-more-service")
     @PreAuthorize("hasRole('PRESTATAIRE')")
     public ResponseEntity<Map<String, String>> addService (@AuthenticationPrincipal UserPrincipale userPrincipale, @RequestBody AddServiceReqProviderDTO serviceReqProviderDTO) {
         Long providerId = userPrincipale.id();
@@ -45,16 +46,15 @@ public class ExpertiseController {
         return ResponseEntity.ok(Map.of("message","service ajouté avec succès."));
     }
 
-    @DeleteMapping("remove-service/{serviceId}")
+    @DeleteMapping("/remove-service/{serviceId}")
     @PreAuthorize("hasRole('PRESTATAIRE')")
     public ResponseEntity<Map<String,String>> deleteService(@AuthenticationPrincipal UserPrincipale userPrincipale,@PathVariable Long serviceId){
         Long providerId = userPrincipale.id();
         expertiseService.deleteService(providerId, serviceId);
         return ResponseEntity.ok(Map.of("message","service supprimé avec succès."));
     }
-
-    @GetMapping("/{serviceId}/provider-ids")
-    public ResponseEntity<List<Long>> getAllProviderIdsByServiceId(@PathVariable Long serviceId){
-        return ResponseEntity.ok(expertiseService.getAllProviderIdsByServiceId(serviceId));
+    @GetMapping("/{serviceId}/providers")
+    public ResponseEntity<List<PrestataireMinResponseDto>> getAllPrestatairesByServiceId(@PathVariable Long serviceId) {
+        return ResponseEntity.ok(expertiseService.getAllPrestatairesByServiceId(serviceId));
     }
 }

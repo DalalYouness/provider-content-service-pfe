@@ -1,10 +1,12 @@
 package com.dalal.providercontentservicepfe.services;
 
+import com.dalal.providercontentservicepfe.dtos.client.PrestataireMinResponseDto;
 import com.dalal.providercontentservicepfe.entities.Category;
 import com.dalal.providercontentservicepfe.entities.Expertise;
 import com.dalal.providercontentservicepfe.entities.ExpertiseId;
 import com.dalal.providercontentservicepfe.exceptions.ServiceAlreadyAssignedException;
 import com.dalal.providercontentservicepfe.exceptions.ServiceNotFoundException;
+import com.dalal.providercontentservicepfe.feign.IdentityClient;
 import com.dalal.providercontentservicepfe.repositories.CategoryRepository;
 import com.dalal.providercontentservicepfe.repositories.ExpertiseRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class ExpertiseServiceImpl implements ExpertiseService {
 
     private final CategoryRepository categoryRepository;
     private final ExpertiseRepository expertiseRepository;
+    private final IdentityClient identityClient;
 
     //check provider exist (yet)
     @Override
@@ -84,13 +87,23 @@ public class ExpertiseServiceImpl implements ExpertiseService {
         }
         expertiseRepository.deleteById(expertiseId);
     }
-
-    @Override
-    public List<Long> getAllProviderIdsByServiceId(Long serviceId) {
+    // helper methode
+    private List<Long> getAllProviderIdsByServiceId(Long serviceId) {
         return expertiseRepository.findByServiceId(serviceId)
                 .stream()
                 .map(Expertise::getProviderId)
                 .toList();
+    }
+
+    @Override
+    public List<PrestataireMinResponseDto> getAllPrestatairesByServiceId(Long serviceId) {
+        List<Long> providerIds = getAllProviderIdsByServiceId(serviceId);
+        // parceque ila kant list dyal ids khawya makayn lach nkhadam network o nsift request
+        // kant2akad qbal mandir ay khotwa nchouf wach list 3amra b3da
+        if (providerIds.isEmpty()) {
+            return List.of();
+        }
+        return identityClient.getAllPrestatairesByIds(providerIds);
     }
 
 

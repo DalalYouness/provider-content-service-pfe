@@ -87,5 +87,14 @@ public class CategoryServiceImpl implements CategoryService{
         return categories.map(categoryMapper::toCategoryResponseDTO);
     }
 
+    @Override
+    public CategoryResponseDTO getServiceById(Long id) {
+        if (id == null) {
+            throw new ServiceNotFoundException("Id introuvable");
+        }
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ServiceNotFoundException("Service introuvable"));
+        return categoryMapper.toCategoryResponseDTO(category);
+    }
+
 
 }

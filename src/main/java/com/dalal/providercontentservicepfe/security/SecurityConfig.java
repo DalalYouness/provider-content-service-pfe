@@ -21,7 +21,7 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.formLogin(AbstractHttpConfigurer::disable)
+            http.formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -40,7 +40,7 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/api/v1/service/all","/api/v1/service/search","/api/v1/service/all/**","/api/v1/expertise/*/provider-ids")
+                        authorize.requestMatchers("/api/v1/service/all","/api/v1/service/search","/api/v1/service/all/**","/api/v1/expertise/*/providers","/api/v1/service/category/*")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )
